@@ -5,7 +5,7 @@ require 'pp'
 URL = 'http://gateway.sonic.net/xslt?PAGE=C_1_0'
 
 class Pace
-  def gather
+  def parse_stats
     text = open(URL).read
     doc = Nokogiri::HTML.parse(text)
 
@@ -23,9 +23,13 @@ class Pace
       arr
     end
 
-    pp data_hash
+    data_hash
+  end
 
+  def gather
+    data_hash = parse_stats
     statistics = []
+
     ["transmit", "receive"].map do |key|
       keys = data_hash["ip_traffic"]
       values = data_hash[key].clone
